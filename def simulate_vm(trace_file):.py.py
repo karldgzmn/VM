@@ -54,7 +54,6 @@ def simulate_vm(trace_file):
                             total_compulsory_misses += 1
                             process_pages_seen[current_pid].add(page_number)
 
-                        # --- Page Replacement (Round-Robin) ---
                         page_frames[rr_pointer] = page_to_find
                         rr_pointer = (rr_pointer + 1) % NUM_FRAMES
 
@@ -65,3 +64,15 @@ def simulate_vm(trace_file):
     except Exception as e:
         print(f"An error occurred during simulation: {e}")
         return
+
+    # --- Print Final Report ---
+    print(f"Access: {total_accesses}")
+    print(f"Hits: {total_hits}")
+    print(f"Misses: {total_misses}")
+    print(f"Compulsory Misses: {total_compulsory_misses}")
+
+
+# --- Main execution ---
+if __name__ == "__main__":
+    INPUT_FILE = "VMInput1.txt"
+    simulate_vm(INPUT_FILE)
