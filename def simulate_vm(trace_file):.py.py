@@ -8,19 +8,27 @@ def simulate_vm(trace_file):
     OFFSET_BITS = 10
 
     # --- State Initialization ---
-    
-    # 1. Counters
     total_accesses = 0
     total_hits = 0
     total_misses = 0
     total_compulsory_misses = 0
-    
-    # 2. Physical Memory (Page Frames)
     page_frames = [None] * NUM_FRAMES
-    
-    # 3. Replacement Pointer
     rr_pointer = 0
-    
-    # 4. Process Management
     current_pid = None
     process_pages_seen = {}
+
+    try:
+        with open(trace_file, 'r') as f:
+            for line in f:
+                parts = line.strip().split()
+                if not parts:
+                    continue  # Skip empty lines
+
+                command = parts[0]
+    except FileNotFoundError:
+        print(f"Error: Trace file '{trace_file}' not found.")
+        print("Please make sure 'VMInput.txt' is in the same directory.")
+        return
+    except Exception as e:
+        print(f"An error occurred during simulation: {e}")
+        return
