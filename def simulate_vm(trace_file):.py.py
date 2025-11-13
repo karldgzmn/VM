@@ -22,9 +22,21 @@ def simulate_vm(trace_file):
             for line in f:
                 parts = line.strip().split()
                 if not parts:
-                    continue  # Skip empty lines
+                    continue
 
                 command = parts[0]
+
+                if command == 'new':
+                    pid = int(parts[1])
+                    if pid not in process_pages_seen:
+                        process_pages_seen[pid] = set()
+
+                elif command == 'switch':
+                    pid = int(parts[1])
+                    current_pid = pid
+                    if current_pid not in process_pages_seen:
+                        process_pages_seen[current_pid] = set()
+
     except FileNotFoundError:
         print(f"Error: Trace file '{trace_file}' not found.")
         print("Please make sure 'VMInput.txt' is in the same directory.")
