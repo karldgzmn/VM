@@ -37,6 +37,27 @@ def simulate_vm(trace_file):
                     if current_pid not in process_pages_seen:
                         process_pages_seen[current_pid] = set()
 
+                elif command == 'access':
+                    if current_pid is None:
+                        continue
+                    
+                    total_accesses += 1
+                    address = int(parts[1])
+                    page_number = address >> OFFSET_BITS
+                    page_to_find = (current_pid, page_number)
+
+                    if page_to_find in page_frames:
+                        total_hits += 1
+                    else:
+                        total_misses += 1
+                        if page_number not in process_pages_seen[current_pid]:
+                            total_compulsory_misses += 1
+                            process_pages_seen[current_pid].add(page_number)
+
+                        # --- Page Replacement (Round-Robin) ---
+                        page_frames[rr_pointer] = page_to_find
+                        rr_pointer = (rr_pointer + 1) % NUM_FRAMES
+
     except FileNotFoundError:
         print(f"Error: Trace file '{trace_file}' not found.")
         print("Please make sure 'VMInput.txt' is in the same directory.")
